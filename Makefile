@@ -30,6 +30,8 @@ OBJS = \
   $K/plic.o \
   $K/virtio_disk.o
 
+# $(shell echo '$OBJS';)
+
 # riscv64-unknown-elf- or riscv64-linux-gnu-
 # perhaps in /opt/riscv/bin
 #TOOLPREFIX = 
@@ -51,7 +53,7 @@ endif
 QEMU = qemu-system-riscv64
 
 CC = $(TOOLPREFIX)gcc
-AS = $(TOOLPREFIX)gas
+AS = $(TOOLPREFIX)as
 LD = $(TOOLPREFIX)ld
 OBJCOPY = $(TOOLPREFIX)objcopy
 OBJDUMP = $(TOOLPREFIX)objdump
@@ -141,6 +143,7 @@ UPROGS=\
 	$U/_zombie\
 	$U/_sleep \
 	$U/_pingpong \
+	$U/_primes \
 
 fs.img: mkfs/mkfs README $(UPROGS)
 	mkfs/mkfs fs.img README $(UPROGS)
@@ -180,3 +183,12 @@ qemu-gdb: $K/kernel .gdbinit fs.img
 	@echo "*** Now run 'gdb' in another window." 1>&2
 	$(QEMU) $(QEMUOPTS) -S $(QEMUGDB)
 
+
+debug:
+	@echo $(OBJS)
+	@echo
+	@echo $(QEMUOPTS)
+	@echo 
+	@echo $(CFLAGS)
+	@echo 
+	@echo $(CC) $(LD) $(AS)
