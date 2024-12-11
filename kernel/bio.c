@@ -138,7 +138,9 @@ brelse(struct buf *b)
 
 void
 bpin(struct buf *b) {
-  acquire(&bcache.lock);
+  // cj: why acquire the bcache lock? to avoid eviction, which is done when some other thread is trying to add a new log
+  // and by calling bget(), acquires the bcache lock and checks if any block has a refcnt ==0 
+  acquire(&bcache.lock); 
   b->refcnt++;
   release(&bcache.lock);
 }
