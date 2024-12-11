@@ -9,12 +9,14 @@ main(int argc, char *argv[])
     exit(1);
   }
 
+  #define READ 0
+  #define WRITE 1
   // Create 2 pipes
-  int childPipe[2]; // for pipe file description
-  int parentPipe[2]; // for pipe file description
+  int pipe1[2]; // child to parent
+  int pipe2[2]; // parent to child
 
-  pipe(childPipe);
-  pipe(parentPipe);
+  pipe(pipe1);
+  pipe(pipe2);
 
   // create a child fork and perform ping pong
   int pid = fork();
@@ -22,22 +24,22 @@ main(int argc, char *argv[])
     // fprintf(1, "%d : child Started.. \n", getpid());
 
     uint8 input;
-    read(childPipe[0], &input, 1);
+    read(pipe1[READ], &input, 1);
 
     fprintf(1, "%d: received ping %d \n", getpid(), input);
 
     uint8 output = 2; 
-    write(parentPipe[1], &output, 1);
+    write(pipe2[WRITE], &output, 1);
 
     exit(0);
   }
   else if (pid > 0 ){ // parent
     // fprintf(1, "%d: Parent continues.. \n", getpid());
     uint8 output = 1; 
-    write(childPipe[1], &output, 1);
+    write(pipe1[WRITE], &output, 1);
 
     uint8 input;
-    read(parentPipe[0], &input, 1);
+    read(pipe2[READ], &input, 1);
     fprintf(1, "%d: received pong %d \n", getpid(), input);
 
     wait((int*)0);
