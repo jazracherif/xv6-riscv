@@ -91,3 +91,15 @@ sys_uptime(void)
   release(&tickslock);
   return xticks;
 }
+
+
+// set tracing for system calls functions enabled in mask
+int sys_trace(){
+  int mask;
+  
+  argint(0, &mask);
+
+  int prev_mask = myproc()->trace_mask;
+  myproc()->trace_mask = mask;
+  return prev_mask;
+}
