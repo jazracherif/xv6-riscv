@@ -146,6 +146,8 @@ UPROGS=\
 	$U/_primes \
 	$U/_find \
 	$U/_trace \
+	$U/_attack \
+	$U/_attacktest \
 
 
 fs.img: mkfs/mkfs README $(UPROGS)
